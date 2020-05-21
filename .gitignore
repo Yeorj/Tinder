@@ -6,3 +6,6 @@ __pycache__
 find.py
 *.log
 *.egg-info
+
+.api_endpoints.py
+build
