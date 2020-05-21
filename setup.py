@@ -29,13 +29,13 @@ class my_build_py(build_py):
 
 
 setup(name='tinder_api',
-      version='2020.5.21.1420',
+      version='2020.5.21.1505',
       description='Tinder API wrapper in Python',
       long_description=open('README.md').read().strip(),
       author='Sean Floyd',
       maintainer='Sean Floyd',
       url='https://github.com/SeanLF/Tinder',
-      py_modules=['tinder_api', 'facebook_auth_token', 'helpers'],
+      py_modules=['tinder_api', 'facebook_auth_token', 'tinder_api_helpers'],
       install_requires=['requests',
                         'robobrowser',
                         'lxml'],
