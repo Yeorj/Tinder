@@ -10,12 +10,15 @@ Since then, more endpoints have been found by [SeanLF](https://github.com/SeanLF
 
 **Note: Using this package violates Tinder's [Terms of Use](https://policies.tinder.com/terms/intl/en).**
 
-## Getting started
+## Installation
 
-Add the project as a dependency by adding `git+https://github.com/SeanLF/Tinder` to your pip's `requirements.txt` file or `setup.py` dependency list.
-Alternatively, you install it directly: `pip[3] install git+https://github.com/SeanLF/Tinder`.
+```bash
+pip install git+https://github.com/SeanLF/Tinder
+```
 
-We soon hope to publish this project as a package on PyPI.
+You can also add the project as a dependency by adding `git+https://github.com/SeanLF/Tinder` to your pip's `requirements.txt` file.
+
+We plan on publishish this project as a package on PyPI.
 
 ## Library documentation
 
@@ -89,6 +92,8 @@ def get_photos(person): # Get a person's photos.
 
 def calculate_age(birth_date_string): # Converts birthday string to age.
 
+def distance_in_km(distance_mi): # Converts miles into km
+
 def sort_by_value(match_info, sort_type): # Sorts matches by the type requested.
 
 def pause(): # In order to appear as a real Tinder user using the app...
@@ -101,7 +106,7 @@ def pause(): # In order to appear as a real Tinder user using the app...
 
 You may also look at the jupyter notebook (`Tinder API.ipynb`) for more examples. [@GloriaMacia](https://github.com/gloriamacia) and [@FBessez](https://github.com/fbessez/Tinder) have contributed.
 
-The best option would be to look at the [tests](./tinder_api/test.py) file as it sets up both SMS and Facebook authentication, and calls most API endpoints.
+The best option would be to look at the [tests](./tests/test.py) file as it sets up both SMS and Facebook authentication, and calls most API endpoints.
 
 ### ~~Config File~~
 
@@ -111,7 +116,12 @@ The best option would be to look at the [tests](./tinder_api/test.py) file as it
 
 ### Set-up
 
-To get started, run `python setup.py install`.
+To get started, run:
+
+```bash
+python setup.py install
+```
+
 This will install the project to your machine, with its dependencies.
 
 Upon installation, the project generates a python file `api_endpoints.py` in the installation folder.
@@ -119,4 +129,9 @@ Upon installation, the project generates a python file `api_endpoints.py` in the
 
 ### Testing
 
-Please run `python tinder_api/test.py` before pushing changes to ensure that you aren't breaking anything (this requires installing the project).
+Please run before pushing changes to ensure that you aren't breaking anything.
+**Note: this requires installing the project.**
+
+```bash
+python tests/test.py
+```
