@@ -21,20 +21,20 @@ def format_matches(matches):
             keys: name, match_id, message_count, photos, bio, gender, avg_success_rate, messages, age, distance, last_activity_date
     '''
     formatted_matches = {}
-    for match in matches[:len(matches)]:
+    for match in matches:
         try:
-            person = match['person']
-            person_id = person['_id']  # This ID for looking up person
+            person = match.get('person')
+            person_id = person.get('_id')  # This ID for looking up person
             formatted_matches[person_id] = {
-                'name': person['name'],
-                'match_id': match['id'],  # This ID for messaging
-                'message_count': match['message_count'],
+                'match_id': match.get('_id'),  # This ID for messaging
+                'message_count': match.get('message_count'),
+                'messages': match.get('messages'),
+                'last_activity_date': match.get('last_activity_date'),
+                'name': person.get('name'),
                 'photos': get_photos(person),
-                'bio': person['bio'],
-                'gender': person['gender'],
-                'messages': match['messages'],
-                'age': calculate_age(match['person']['birth_date']),
-                'last_activity_date': match['last_activity_date'],
+                'bio': person.get('bio'),
+                'gender': person.get('gender'),
+                'age': calculate_age(match.get('person').get('birth_date')),
             }
         except Exception as ex:
             template = "An exception of type {0} occurred. Arguments:\n{1!r}"
