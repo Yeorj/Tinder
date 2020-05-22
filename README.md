@@ -84,7 +84,7 @@ tinder_api = Tinder_API(api_token=stored_api_token)
 See the documentation in `helpers.py` for more information, in particular for parameter and return documentation.
 
 ```python
-def get_match_info(matches): # Wrap API data to python object for manipulation by helpers.
+def wrap_matches(matches): # Wrap API data to python object for manipulation by helpers.
 
 def get_match_id_by_name(match_info, name): # Returns a list of IDs that have the same requested name.
 
@@ -95,6 +95,14 @@ def calculate_age(birth_date_string): # Converts birthday string to age.
 def distance_in_km(distance_mi): # Converts miles into km
 
 def sort_by_value(match_info, sort_type): # Sorts matches by the type requested.
+
+def how_long_in_words(duration, include_seconds=False): # Converts a datetime difference into words.
+
+def how_long_in_words_since(ping_time): # How long has it been since this date in words.
+
+def how_long_since_last_seen(match): # How long has it been since the last interaction with a Tinder match.
+
+def how_long_since_last_seen_all(matches): # How long has it been since the last interaction with each Tinder match.
 
 def pause(): # In order to appear as a real Tinder user using the app...
              # When making many API calls, it is important to pause a...

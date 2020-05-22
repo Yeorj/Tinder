@@ -9,7 +9,7 @@ from datetime import date, datetime
 from random import random
 from time import sleep
 
-def get_match_info(matches):
+def format_matches(matches):
     '''
     Wrap API data to python object for manipulation by helpers.
 
@@ -20,12 +20,12 @@ def get_match_info(matches):
         value: `dict`
             keys: name, match_id, message_count, photos, bio, gender, avg_success_rate, messages, age, distance, last_activity_date
     '''
-    match_info = {}
+    formatted_matches = {}
     for match in matches[:len(matches)]:
         try:
             person = match['person']
             person_id = person['_id']  # This ID for looking up person
-            match_info[person_id] = {
+            formatted_matches[person_id] = {
                 'name': person['name'],
                 'match_id': match['id'],  # This ID for messaging
                 'message_count': match['message_count'],
@@ -34,29 +34,29 @@ def get_match_info(matches):
                 'gender': person['gender'],
                 'messages': match['messages'],
                 'age': calculate_age(match['person']['birth_date']),
-                'distance': person['distance_mi'], # in miles
+                'last_activity_date': match['last_activity_date'],
             }
         except Exception as ex:
             template = "An exception of type {0} occurred. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
             return {'error': message, 'exception': ex}
-    return match_info
+    return formatted_matches
 
 
-def get_match_id_by_name(match_info, name):
+def get_match_id_by_name(formatted_matches, name):
     '''
     Returns a list of IDs that have the same requested name.
 
-    :param match_info: value from calling :method: `get_match_info`.
+    :param formatted_matches: value from calling :method: `format_matches`.
 
     :param name: whose name to look for.
 
     :return: list of IDs that have the same requested name.
     '''
     list_of_ids = []
-    for match in match_info:
-        if match_info[match]['name'] == name:
-            list_of_ids.append(match_info[match]['match_id'])
+    for match in formatted_matches:
+        if formatted_matches[match]['name'] == name:
+            list_of_ids.append(formatted_matches[match]['match_id'])
     if len(list_of_ids) > 0:
         return list_of_ids
     return {'error': "No matches by name of %s" % name}
@@ -101,15 +101,75 @@ def distance_in_km(distance_mi):
     return round(ONE_MILE_IN_KM*distance_mi)
 
 
-def sort_by_value(match_info, sort_type):
+def sort_by_value(formatted_matches, sort_type):
     '''
     Sorts matches by the type requested.
 
-    :param match_info: value from calling :method: `get_match_info`.
+    :param formatted_matches: value from calling :method: `format_matches`.
 
-    :param sort_type: one of: 'age', 'message_count', 'gender'.
+    :param sort_type: the field to sort by. Possible values:
+        name, match_id, message_count, bio, gender, messages, age, last_activity_date
     '''
-    return sorted(match_info.items(), key=lambda x: x[1][sort_type], reverse=True)
+    return sorted(formatted_matches.items(), key=lambda x: x[1][sort_type], reverse=True)
+
+
+def how_long_in_words(duration, include_seconds=False):
+    '''
+    Converts a datetime difference into words.
+
+    :param duration: datetime difference.
+
+    :param include_seconds: whether to include seconds or not.
+
+    :return: duration in words.
+    '''
+    secs = duration.seconds
+    days = duration.days
+    m, s = divmod(secs, 60)
+    h, m = divmod(m, 60)
+    how_long = ("%d days, %d hrs %02d min" % (days, h, m))
+    if include_seconds:
+        how_long = ("%s %02d s" % (how_long, s))
+    return how_long
+
+
+def how_long_in_words_since(ping_time):
+    '''
+    How long since a person was seen on Tinder.
+
+    :return: duration formatted as a `string`.
+    '''
+    ping_time = ping_time[:len(ping_time) - 5]
+    datetime_ping = datetime.strptime(ping_time, '%Y-%m-%dT%H:%M:%S')
+    return how_long_in_words(datetime.utcnow() - datetime_ping)
+
+
+def how_long_since_last_seen(match):
+    '''
+    How long since a match was last interacted with on Tinder.
+
+    :return: duration formatted as a `string`.
+    '''
+    return how_long_in_words_since(match['last_activity_date'])
+
+
+def how_long_since_last_seen_all(formatted_matches):
+    '''
+    How long since each matched person was last interacted with on Tinder.
+
+    :param formatted_matches: value from calling :method: `format_matches`.
+
+    :return: :class: `dict` like `{match_id: {'person': {'id': id, 'name': name}, 'duration': duration}}`
+    '''
+    return {
+        match['_id']: {
+            'person': {
+                'id': match['person']['id'],
+                'name': match['person']['name']
+            },
+            'duration': how_long_since_last_seen(match)
+        }
+    for match in formatted_matches }
 
 
 def pause():
