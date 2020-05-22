@@ -8,4 +8,5 @@ find.py
 *.egg-info
 
 .api_endpoints.py
-build
+build/
+dist/

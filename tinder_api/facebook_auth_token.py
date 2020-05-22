@@ -6,6 +6,8 @@ Custom method: `get_facebook_id`
 import re
 
 import requests
+import werkzeug
+werkzeug.cached_property = werkzeug.utils.cached_property
 import robobrowser
 
 MOBILE_USER_AGENT = 'Tinder/7.5.3 (iPhone; iOS 10.3.2; Scale/2.00)'
@@ -32,9 +34,7 @@ def get_facebook_access_token(email, password):
             r"access_token=([\w\d]+)", s.response.content.decode()).groups()[0]
         return access_token
     except Exception as ex:
-        print('access token could not be retrieved. Check your username and password.')
-        print("Official error: %s" % ex)
-        return {'error': 'access token could not be retrieved. Check your username and password.'}
+        return {'error': 'access token could not be retrieved. Check your username and password.', 'exception': str(ex)}
 
 
 def get_facebook_id(access_token):

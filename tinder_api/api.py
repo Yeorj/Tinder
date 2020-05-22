@@ -10,26 +10,24 @@ Read `readme.md` and `Tinder API.ipnyb` for usage.
 
 import json
 import requests
+from tinder_api.api_endpoints import API_ENDPOINTS
 
 class Tinder_API(object):
     def __init__(self, host= 'https://api.gotinder.com', headers={}, api_token=None):
         self._host = host
         self._not_authenticated_error = {'error': 'Please authenticate first.'}
-        from api_endpoints import API_ENDPOINTS
         self._API_ENDPOINTS = API_ENDPOINTS
         self._headers = headers if headers != {} else {
             'app_version': '11.15.0',
             'platform': 'ios',
-            'User-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1',
+            'User-agent': 'Tinder/11.15.0 (iPhone; iOS 15.5.0; Scale/2.00)',
             'Accept': 'application/json',
             'content-type': 'application/json',
         }
         self._auth_key = 'X-Auth-Token'
         self._content_type = 'content-type'
         if api_token is not None:
-            print(api_token)
             self.authenticate(api_token)
-            print(self._headers)
 
 
     # AUTHENTICATION METHODS
@@ -71,7 +69,7 @@ class Tinder_API(object):
         :param refresh_token: Refresh token obtained from :method:`get_refresh_token`.
         '''
         data = {'refresh_token': refresh_token }
-        response_body = self.custom_request(self._API_ENDPOINTS['authApiPath'] + '/sms', data=data)
+        response_body = self.custom_request(self._API_ENDPOINTS['authApiPath'] + '/sms', http_verb='POST', data=data)
         api_token = response_body.get("data", {}).get("api_token", None)
         self.authenticate(api_token)
         return api_token
@@ -99,8 +97,6 @@ class Tinder_API(object):
         '''
         Returns a list of users that you can swipe on.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.custom_request('/user/recs')
 
 
@@ -108,20 +104,16 @@ class Tinder_API(object):
         '''
         This works more consistently then the normal get_recommendations becuase it seeems to check new location.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('recs', 'getRecs')
 
 
-    def get_updates(self, last_activity_date=''):
+    def get_updates(self, last_activity_date=None):
         '''
         Returns all updates since the given activity date.
 
         :param last_activity_date: The last activity date is defaulted at the beginning of time.
             Format: '2017-07-09T10:28:13.392Z'
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('user', 'getUpdates', data={'last_activity_date': last_activity_date})
 
 
@@ -129,8 +121,6 @@ class Tinder_API(object):
         '''
         Returns your own profile data
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.custom_request('/profile')
 
 
@@ -138,8 +128,6 @@ class Tinder_API(object):
         '''
         Returns your own profile data. Does not seem to work.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('profile', 'getUserProfile')
 
 
@@ -158,8 +146,6 @@ class Tinder_API(object):
         
         example: change_preferences(age_filter_min=30, gender=0)
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.custom_request('/profile', http_verb='POST', data=preferences)
 
 
@@ -170,8 +156,6 @@ class Tinder_API(object):
         'status', 'groups', 'products', 'rating', 'tutorials',
         'travel', 'notifications', 'user']
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.custom_request('/meta')
 
 
@@ -182,8 +166,6 @@ class Tinder_API(object):
         'fast_match', 'top_picks', 'paywall', 'merchandising', 'places',
         'typing_indicator', 'profile', 'recs']
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('meta', 'getMeta')
 
 
@@ -196,8 +178,6 @@ class Tinder_API(object):
 
         :param lon: longitude.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('passport', 'submitPassportLocation', data={'lat': lat, 'lon': lon})
 
     def reset_real_location(self):
@@ -205,8 +185,6 @@ class Tinder_API(object):
         Reset your real location.
         Note: Requires a passport / Tinder Plus.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('passport', 'resetPassportLocation')
 
 
@@ -217,8 +195,6 @@ class Tinder_API(object):
         :param username: string
             ex: https://www.gotinder.com/@YOURUSERNAME
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.custom_request('/profile/username', http_verb='PUT', data={'username': username})
 
     def reset_webprofileusername(self, username):
@@ -227,8 +203,6 @@ class Tinder_API(object):
 
         :param username: ?
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.custom_request('/profile/username', http_verb='DELETE')
 
 
@@ -238,8 +212,6 @@ class Tinder_API(object):
 
         :param id: ID of the user to find
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('user', 'getOtherUserById', userId=id)
 
 
@@ -251,8 +223,6 @@ class Tinder_API(object):
 
         :param msg: message to send
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('user', 'sendMessage', data={'message': msg}, matchId=match_id)
 
 
@@ -262,8 +232,6 @@ class Tinder_API(object):
 
         :param match_id: person to unmatch
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('user', 'unmatch', matchId=match_id)
 
 
@@ -273,19 +241,17 @@ class Tinder_API(object):
 
         :param user_id: person to superlike
         '''
-        return self.like(user_id, is_super_like=True)
+        return self.like(user_id, action='superlike')
 
 
-    def like(self, user_id, is_super_like=False):
+    def like(self, user_id, action='like'):
         '''
         Like someone
 
         :param user_id: person to like
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
-        endpoint = 'recSuperLike' if is_super_like else 'recLike'
-        return self.api_request('user', endpoint, userId=user_id)
+        endpoint = {'superlike': 'recSuperLike', 'like': 'recLike', 'dislike': 'recDislike'}[action]
+        return self.api_request('recs', endpoint, userId=user_id)
 
 
     def dislike(self, user_id):
@@ -294,10 +260,7 @@ class Tinder_API(object):
 
         :param user_id: person to dislike
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
-        endpoint = self.get_endpoint('user', 'recDislike')
-        return self.api_request('user', 'recDislike', userId=user_id)
+        return self.like(user_id, action='dislike')
 
 
     def report(self, user_id, cause, explanation=''):
@@ -311,8 +274,6 @@ class Tinder_API(object):
 
         :param explanation: optional user comment
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('report', 'reportUser', data={'cause': cause, 'text': explanation}, userId=user_id)
 
 
@@ -322,8 +283,6 @@ class Tinder_API(object):
 
         :param match_id: ID of the match to get info about
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('user', 'getMatch', matchId=match_id)
 
 
@@ -331,29 +290,24 @@ class Tinder_API(object):
         '''
         Get matches, in increments of roughly 60. Use the page token in the response to obtain the next set.
 
+        :param limit: maximum number of matches to get.
+
         :param page_token: Page offset. Obtained in this function's response.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
-        self.api_request('user', 'getMatches', {'limit': limit, 'page_token': page_token})
+        return self.api_request('user', 'getMatches', data={'count': limit, 'page_token': page_token})
 
 
     def fast_match_count(self):
         '''
         Get your match count. Returns a value between 0 and 99.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('recs', 'fastMatchCount')
-        # count = r.headers['fast-match-count']
 
     
     def fast_match_teasers(self):
         '''
         Get the non blurred thumbnail image shown in the messages-window (the one showing the likes you received).
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('recs', 'fastMatchTeasers')
 
 
@@ -363,8 +317,6 @@ class Tinder_API(object):
 
         :param limit: limit to the number of results.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('giphy', 'trending', data={'limit': limit})
 
 
@@ -374,8 +326,6 @@ class Tinder_API(object):
 
         :param limit: limit to the number of results.
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
         return self.api_request('giphy', 'search', data={'limit': limit, 'query': query})
 
 
@@ -391,32 +341,31 @@ class Tinder_API(object):
 
         :return: :class:`requests.Reponse`
         '''
-        if self._auth_key not in self._headers:
-            return self._not_authenticated_error
-        endpoint = self.get_endpoint(service, endpoint)
-        if kwargs != {}:
-            endpoint.format(**kwargs)
-        return self.custom_request(endpoint.get('path'), http_verb=endpoint.get('method', 'GET'), data=data)
+        api_endpoint = self.get_endpoint(service, endpoint)
+        return self.custom_request(api_endpoint.get('path').format(**kwargs), http_verb=api_endpoint.get('method', 'GET'), data=data)
 
     
     def get_endpoint(self, service, endpoint):
         return self._API_ENDPOINTS['services'].get(service)['endpoints'].get(endpoint)
 
 
-    def custom_request(self, resource, http_verb='get', data={}):
+    def custom_request(self, endpoint, http_verb='get', data={}):
         '''
-        Allow calling any resource of the Tinder API.
+        Allow calling any endpoint of the Tinder API.
 
-        :param resource: resource (part of the link after host).
+        :param endpoint: endpoint (part of the link after host).
 
-        :param data: data to be sent with the request
+        :param data: To be sent with the request. If the http 
+        request using the verb specified supports a request body,
+        then convert the data to a JSON string, otherwise it is
+        converted to a query string.
 
         :param http_verb: HTTP verb.
             Can be: get, head, post, patch, put, delete, options
 
         :return: response object
         '''
-        if self._auth_key not in self._headers:
+        if self._auth_key not in self._headers and '/auth' not in endpoint:
             return self._not_authenticated_error
         
         http_verb_functions={ 'get': requests.get, 'head': requests.head, 'post': requests.post, 'patch': requests.patch, 'put': requests.put, 'delete': requests.delete, 'options': requests.options }
@@ -424,7 +373,7 @@ class Tinder_API(object):
         response_has_body={ 'get': True, 'head': False, 'post': True, 'patch': True, 'put': False, 'delete': True, 'options': True }
         
         http_verb = http_verb.lower()
-        url = self._host + resource
+        url = self._host + endpoint
         http_verb_function = http_verb_functions[http_verb.lower()]
 
         if not request_has_body[http_verb]:
@@ -432,10 +381,6 @@ class Tinder_API(object):
             data = None
         else:
             data = json.dumps(data)
-
-        print(url)
-        print(http_verb)
-        print(data)
 
         try:
             # call API and developer must figure out what to do with responses with no body

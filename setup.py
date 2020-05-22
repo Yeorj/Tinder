@@ -6,7 +6,7 @@ from distutils.command.build_py import build_py
 def generate_api_endpoints_py_content(directory):
       import json
       filename = 'api_endpoints'
-      source_file = filename + '.json'
+      source_file = 'tinder_api/' + filename + '.json'
       new_file = os.path.join(directory, filename + '.py')
       with open(source_file, 'r') as endpoints_file:
             source_file_contents = endpoints_file.read()
@@ -21,21 +21,22 @@ class my_build_py(build_py):
       def run(self):
         # honor the --dry-run flag
         if not self.dry_run:
-            self.mkpath(self.build_lib)
-            generate_api_endpoints_py_content(self.build_lib)
+            target_dir = os.path.join(self.build_lib, 'tinder_api')
+            self.mkpath(target_dir)
+            generate_api_endpoints_py_content(target_dir)
 
         # distutils uses old-style classes, so no super()
         build_py.run(self)
 
 
 setup(name='tinder_api',
-      version='2020.5.21.1505',
+      version='1.0.0',
       description='Tinder API wrapper in Python',
       long_description=open('README.md').read().strip(),
       author='Sean Floyd',
       maintainer='Sean Floyd',
       url='https://github.com/SeanLF/Tinder',
-      py_modules=['tinder_api', 'facebook_auth_token', 'tinder_api_helpers'],
+      py_modules=['tinder_api.api', 'tinder_api.facebook_auth_token', 'tinder_api.helpers'],
       install_requires=['requests',
                         'robobrowser',
                         'lxml'],

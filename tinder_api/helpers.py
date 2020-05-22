@@ -9,8 +9,6 @@ from datetime import date, datetime
 from random import random
 from time import sleep
 
-import config
-
 def get_match_info(matches):
     '''
     Wrap API data to python object for manipulation by helpers.

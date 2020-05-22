@@ -40,11 +40,11 @@
     "auth": {
       "endpoints": {
         "smsSend": {
-          "path": "/v2/auth/sms/send",
+          "path": "/v2/auth/sms/send?auth_type=sms",
           "method": "POST"
         },
         "smsValidate": {
-          "path": "/v2/auth/sms/validate",
+          "path": "/v2/auth/sms/validate?auth_type=sms",
           "method": "POST"
         },
         "resetNotifications": {
