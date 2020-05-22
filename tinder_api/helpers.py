@@ -98,7 +98,7 @@ def distance_in_km(distance_mi):
     :return: distance in km (int)
     '''
     ONE_MILE_IN_KM = 1.60934
-    return round(ONE_MILE_IN_KM*distance_in_km)
+    return round(ONE_MILE_IN_KM*distance_mi)
 
 
 def sort_by_value(match_info, sort_type):
