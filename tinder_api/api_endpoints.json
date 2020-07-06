@@ -27,10 +27,6 @@
           "path": "/v2/account/recovery/confirm",
           "method": "POST"
         },
-        "recoverySmsValidate": {
-          "path": "/v2/account/recovery/validate",
-          "method": "POST"
-        },
         "submitUserConsent": {
           "path": "/v2/account/consents",
           "method": "POST"
@@ -319,6 +315,9 @@
         },
         "verificationSelfieComplete": {
           "path": "/v2/verification/selfie/complete"
+        },
+        "username": {
+          "path": "/profile/username"
         }
       }
     },
@@ -499,7 +498,7 @@
         }
       }
     },
-    "giphy": {
+    "gif": {
       "endpoints": {
         "trending": {
           "path": "/giphy/trending",

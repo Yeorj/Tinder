@@ -30,7 +30,7 @@ class my_build_py(build_py):
 
 
 setup(name='tinder_api',
-      version='1.0.0',
+      version='1.0.1',
       description='Tinder API wrapper in Python',
       long_description=open('README.md').read().strip(),
       author='Sean Floyd',
