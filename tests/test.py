@@ -44,12 +44,12 @@ class Tests(object):
         api_helpers.pause()
 
         profile = self._tinder_api.get_self()
-        if profile['meta']['status'] != 200:
+        if len(profile.keys()) == 0:
             print('get_self failed')
         api_helpers.pause()
 
         meta = self._tinder_api.get_meta()
-        if meta['meta']['status'] != 200:
+        if meta['status'] != 200:
             print('get_meta failed')
         api_helpers.pause()
 
@@ -59,7 +59,7 @@ class Tests(object):
         api_helpers.pause()
 
         user = self._tinder_api.get_person(profile['_id'])
-        if user['meta']['status'] != 200:
+        if user['status'] != 200:
             print('get_person failed')
         api_helpers.pause()
 
@@ -75,7 +75,7 @@ class Tests(object):
         api_helpers.pause()
 
         like_result = self._tinder_api.like(match['data']['person']['_id'])
-        if like_result['meta']['status'] != 200:
+        if like_result['status'] != 200:
             print('like failed')
         api_helpers.pause()
 
