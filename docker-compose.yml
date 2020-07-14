@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  app: &app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PYTHON_VERSION: "3.8"
+    image: tinder-api:1.0.0
+    tmpfs:
+      - /tmp
+    stdin_open: true
+    tty: true
+    volumes:
+      - lib:/usr/local/lib
+
+volumes:
+  lib:

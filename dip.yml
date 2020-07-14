@@ -1,0 +1,33 @@
+# Required minimum dip version
+version: "4.1"
+
+environment:
+  COMPOSE_EXT: development
+
+compose:
+  files:
+    - docker-compose.yml
+  project_name: tinder-api
+
+interaction:
+  bash:
+    description: Open the Bash shell in app's container
+    service: app
+    command: bash
+    compose:
+      run_options: [no-deps]
+
+  sh:
+    description: Open the Bash shell in app's container
+    service: app
+    command: bash
+
+  test:
+    description: Run the tests
+    service: app
+    command: python3 tests/test.py
+  
+
+provision:
+  - dip compose down --volumes
+  - docker-compose up -d --build app

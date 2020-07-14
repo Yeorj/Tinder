@@ -6,7 +6,7 @@ Since then, more endpoints have been found by [SeanLF](https://github.com/SeanLF
 
 ## [API Documentation](./API_Documentation.md) 👈 link
 
-**Note: This was updated in May 2020 so it might be outdated.**
+**Note: This was updated in July 2020 so it might be outdated.**
 
 **Note: Using this package violates Tinder's [Terms of Use](https://policies.tinder.com/terms/intl/en).**
 
@@ -127,7 +127,7 @@ The best option would be to look at the [tests](./tests/test.py) file as it sets
 To get started, run:
 
 ```bash
-python setup.py install
+dip provision
 ```
 
 This will install the project to your machine, with its dependencies.
@@ -141,5 +141,5 @@ Please run before pushing changes to ensure that you aren't breaking anything.
 **Note: this requires installing the project.**
 
 ```bash
-python tests/test.py
+dip test
 ```
