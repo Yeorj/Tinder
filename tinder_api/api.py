@@ -317,7 +317,7 @@ class Tinder_API(object):
 
         :param limit: limit to the number of results.
         '''
-        return self.api_request('giphy', 'trending', data={'limit': limit})
+        return self.api_request('gif', 'trending', data={'limit': limit})
 
 
     def gif_query(self, query, limit=3):
@@ -326,7 +326,7 @@ class Tinder_API(object):
 
         :param limit: limit to the number of results.
         '''
-        return self.api_request('giphy', 'search', data={'limit': limit, 'query': query})
+        return self.api_request('gif', 'search', data={'limit': limit, 'query': query})
 
 
     def api_request(self, service, endpoint, data={}, **kwargs):
